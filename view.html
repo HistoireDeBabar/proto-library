@@ -1,0 +1,46 @@
+ <!DOCTYPE>
+ <html>
+ <head>
+ <title>Library Prototype</title>
+ <script data-main="scripts/main" src="scripts/require.js"></script>
+ </head>
+ <body>
+
+	<div data-bind="with: library">
+		<ul>
+			<!-- ko foreach: navigation -->
+			<li data-bind="text: $data.name, click: $parent.changeDirectory.bind($parent, $data)">
+
+			</li>
+			<!-- /ko -->
+		</ul>
+
+	    <table>
+	    	<thead>
+	    		<tr>
+	    		<!-- ko foreach: headers-->
+	    		<td data-bind="text: $data, click: $parent.sort.bind($parent, $data)"></td>
+	    		<!-- /ko -->
+	    		<tr>
+	    	</thead>
+	    	<tbody data-bind="with: current">
+	    		<!-- ko foreach: contents -->
+	    		<tr>
+    				<!-- ko if: $data.description === undefined -->
+    					<td data-bind="text: $data.name, click: $root.library.changeDirectory.bind($root.library, $data)"></td>
+    				<!-- /ko -->
+    				<!-- ko ifnot: $data.description === undefined -->
+		    			<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.description"></td>
+						<td> <input type="checkbox" data-bind="checked: $data.active"/></td>
+	    			<!-- /ko -->
+	    		</tr>
+				<!-- /ko -->
+			    		
+	    	</tbody>	
+	    </table>
+	</div>
+
+
+ </body>
+ </html>
