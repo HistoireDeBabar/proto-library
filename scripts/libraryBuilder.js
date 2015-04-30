@@ -12,7 +12,7 @@ define(["knockout", "knockout-mapping", "folder", "library"],function (ko, map, 
         for (var i = data.length - 1; i >= 0; i--) {
             var f = data[i];
             if(f.name && f.contents){   
-            var next = new folder.createFolder(f.name);
+            var next = new folder.createFolder(f.name, f.contents);
             root.add(next);
             buildFolders(f, next);
             }

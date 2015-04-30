@@ -7,6 +7,7 @@ define(["knockout"], function (ko) {
         this.filterBy = ko.observable("");
         this.search = ko.observable("");
         this.navigation = ko.observableArray([root] || []);
+        this.selected = ko.observable({});
         // this.folders.sort(function(left, right){
         // 	return left.name === right.name ? 0 : left.name < right.name ? -1 : 1
         // });
@@ -28,31 +29,35 @@ define(["knockout"], function (ko) {
 
     };
 
-    Library.prototype.changeDirectory = function(next){
-    	console.log(next);
-    	if(next === this.current()) {
-    		return;
-    	}
-    	if(this.navigation.indexOf(next) === -1){
-    		this.navigation.push(next);
-    	}
-    	else{
-    		var notFound = true;
-    		var path = [];
-			for (var i = 0; i <= this.navigation().length - 1; i++) {
-				var nav = this.navigation()[i];
-				console.log(nav.name());
-				console.log(next.name());
-				path.push(nav);
-				if(nav.name() === next.name()){
-					break;
-				}
-			};
 
-			this.navigation(path);
-    	}
-    	console.log(this.navigation());
-    	this.current(next);
+    Library.prototype.changeDirectory = function(next){
+    	if(this.selected() == next) {
+            if(next === this.current()) {
+                        return;
+                    }
+                    if(this.navigation.indexOf(next) === -1){
+                        this.navigation.push(next);
+                    }
+                    else{
+                        var notFound = true;
+                        var path = [];
+                        for (var i = 0; i <= this.navigation().length - 1; i++) {
+                            var nav = this.navigation()[i];
+                            console.log(nav.name());
+                            console.log(next.name());
+                            path.push(nav);
+                            if(nav.name() === next.name()){
+                                break;
+                            }
+                        };
+
+                        this.navigation(path);
+                    }
+                    this.current(next);
+        }
+    	else {
+            this.selected(next);
+        }
     };
 
     Library.prototype.selectFunction = function(headername) {
