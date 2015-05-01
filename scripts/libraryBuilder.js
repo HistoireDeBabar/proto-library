@@ -7,34 +7,47 @@ define(["knockout", "knockout-mapping", "folder", "library"],function (ko, map, 
 			return Object.keys(ob);
 		}
     };
+    var createRoot = function(data){
+        var root = new folder.createFolder('root', []);
+        for (var i = data.length - 1; i >= 0; i--) {
+            var f = data[i];
+            if(f.name === 'root'){
+                if(f.contents){
+                  for(var j = f.contents.length - 1; j >= 0; j--) {
+                          if(f.contents[j].type !== 'folder'){
+                            root.contents.push(map.fromJS(f.contents[j]));
+                        }
+                    }  
+                    return root;
+                } 
+            }
+        }
+        throw "root folder could not be found";
+    };
 
     var buildFolders = function buildFolders(data, root){
         for (var i = data.length - 1; i >= 0; i--) {
             var f = data[i];
-            if(f.name && f.contents){   
-            var next = new folder.createFolder(f.name, f.contents);
-            root.add(next);
-            buildFolders(f, next);
-            }
-            else {
-                if(f.contents){
-                    for (var  k = f.contents.length - 1; k >= 0; k--) {
-                       root.contents.push(map.fromJS(f.contents[k]));
-                       console.log(root.name());
-                       console.log(root.contents());
-                    }
+            if(f.name !== 'root'){
+               if(f.type !== 'folder'){
+                root.contents.push(map.fromJS(f));
                 }
+                if(f.name && f.contents){   
+                var next = new folder.createFolder(f.name);
+                root.add(next);
+                buildFolders(f.contents, next);
+                } 
             }
+            
         }
         return root;   
     };
 
     var build = function(data){
     	var headers = buildHeaders(data);
-        var root =  new folder.createFolder('root', [])
+        //initialise root folder
+        var root =  createRoot(data);
     	var folders = buildFolders(data, root);
-        console.log(folders);
-        console.log(folders.contents());
     	return new library.createLibrary(headers, folders);
     };
 

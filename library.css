@@ -15,6 +15,10 @@ body {
 	box-shadow: 0px 2px 5px #888888;
 }
 
+span:hover {
+	cursor: pointer;
+}
+
 .folder-icon {
  	width:20px;
 	height: 20px;
@@ -22,6 +26,29 @@ body {
     background: url('assets/opacity-folder.png') no-repeat;
     background-size: 100% 100%;
 }
+
+.edit {
+ 	width:30px;
+	height: 30px;
+	display: inline-block;
+    background: url('assets/edit.png') no-repeat;
+    background-size: 100% 100%;
+    float: right;
+    margin-right: 2%;
+    margin-top: -25px;
+}
+
+.add {
+ 	width:30px;
+	height: 30px;
+	display: inline-block;
+    background: url('assets/plus.png') no-repeat;
+    background-size: 100% 100%;
+    float: right;
+    margin-right: 2%;
+    margin-top: -25px;
+}
+
 
 .selected {
 	background-color: #BEC9D9;
@@ -58,6 +85,12 @@ th{
 	padding-bottom: 10px;
 	text-align: left;
 } 
+
+
+th:hover {
+	cursor: pointer;
+	background-color: #BEC9D9;
+}
 
 thead{
 	background-color: #EBF0F8;
