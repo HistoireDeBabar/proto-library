@@ -12,7 +12,7 @@ define(["knockout", "folder"], function (ko, folder) {
         this.fileEditor = ko.observable(false);
         this.globalSelector = ko.observable(false);
         this.headers().unshift('select');
-        this.searchArray = ko.observable([]);
+        this.searchArray = ko.observableArray([]);
         this._buildSearch(this.root());
         this.multiSelect = ko.observableArray([]);
         this.folderList = ko.observableArray(undefined);
@@ -61,15 +61,31 @@ define(["knockout", "folder"], function (ko, folder) {
 
     }
 
+    Library.prototype._removeInnerFilesFromFolder = function _removeInnerFilesFromFolder(folder){
+    	var folders = folder.contents();
+    	for (var i = folders.length - 1; i >= 0; i--) {
+    		var file = folders[i];
+    		if(file.type === 'folder'){
+    			this._removeInnerFilesFromFolder(file);
+    		}
+    		else {
+    			this.searchArray.remove(file);
+    		}
+    	};
+    	return;
+    };
+
     Library.prototype.deleteAll = function(){
        var allSelected = this._getMultiForFunction();
-
-        for (var i = allSelected.length - 1; i >= 0; i--) {
-            var file = allSelected[i];
-            if(file !== this.current()){
-                this.current().contents.remove(file);
-            }
-        };
+       for (var i = allSelected.length - 1; i >= 0; i--) {
+       	var file = allSelected[i];
+       	if(file.type === 'folder'){
+       		this._removeInnerFilesFromFolder(file);
+       	}
+       	else {
+       		this.searchArray.remove(file);
+       	}
+       };
 
         this._clearMultiSelect();
     }
