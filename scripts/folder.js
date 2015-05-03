@@ -5,6 +5,7 @@ define(["knockout"], function (ko) {
         this.contents = ko.observableArray(contents || []);
         this.show = ko.observable(true);
         this.type = 'folder';
+        this.select = ko.observable(false);
     };
 
     Folder.prototype.collapse = function(){

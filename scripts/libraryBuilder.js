@@ -15,6 +15,7 @@ define(["knockout", "knockout-mapping", "folder", "library"],function (ko, map, 
                 if(f.contents){
                   for(var j = f.contents.length - 1; j >= 0; j--) {
                           if(f.contents[j].type !== 'folder'){
+                            f.contents[j].select = ko.observable(false);
                             root.contents.push(map.fromJS(f.contents[j]));
                         }
                     }  
@@ -28,6 +29,7 @@ define(["knockout", "knockout-mapping", "folder", "library"],function (ko, map, 
     var buildFolders = function buildFolders(data, root){
         for (var i = data.length - 1; i >= 0; i--) {
             var f = data[i];
+            f.select = ko.observable(false);
             if(f.name !== 'root'){
                if(f.type !== 'folder'){
                 root.contents.push(map.fromJS(f));

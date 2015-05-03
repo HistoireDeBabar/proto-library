@@ -4,12 +4,14 @@
  <title>Library Prototype</title>
  <script data-main="scripts/main" src="scripts/require.js"></script>
  <link rel="stylesheet" type="text/css" href="library.css">
+ <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
  </head>
  <body>
 
 	<div data-bind="with: library">
 		<div class="nav">
 		<h4>Navigation</h4>
+			<input type="text" data-bind="value: search" placeholder="Search..."/><button data-bind="click: filter">Search</button>
 			<ul>
 				<!-- ko foreach: navigation -->
 				<li data-bind="text: $data.name, singleClick: $parent.clicked.bind($root.library, $data), event : { dblclick: $parent.doubleClicked.bind($root.library, $data) }, css : {'selected' : $parent.selected() == $data}">
@@ -17,11 +19,21 @@
 				</li>
 				<!-- /ko -->
 			</ul>
+			<span class="delete" data-bind="visible: selected() !== undefined || multiSelect().length > 0, click: deleteAll.bind($data)"></span>
+			<span class="move" data-bind="visible: selected() !== undefined || multiSelect().length > 0, click: showFoldersOption.bind($data)"></span>
 			<span class="edit" data-bind="click: showEditor, visible: selected() !== undefined"></span>
 			<span class="add" data-bind="click: add"></span>
+
+		</div>
+
+		<!-- move option drop down -->
+		<div class="move-options" data-bind="visible: showMoveEditor">
+			<!-- ko foreach: folderList -->
+			<p data-bind="text: $data.name, event: {dblclick: $parent.moveSelectedToFile.bind($parent, $data)}"></p>
+			<!-- /ko -->
 		</div>
 		
-	    <table>
+	    <table data-bind="event: { mouseover: hideMoveEditor.bind($data) }">
 	    	<thead>
 	    		<tr>
 	    		<!-- ko foreach: headers-->
@@ -38,7 +50,7 @@
 	    	<tbody data-bind="with: current">
 	    		<!-- ko foreach: contents -->
 	    		<tr data-bind="css : {'selected' : $root.library.selected() == $data}, singleClick: $root.library.clicked.bind($root.library, $data), event : { dblclick: $root.library.doubleClicked.bind($root.library, $data) }">
-	    			<td><input type="checkbox" data-bind="checked: $data.select"</td>
+	    			<td><input type="checkbox" data-bind="checked: $data.select, click: $root.library.toggleFromMultiSelect.bind($root.library, $data)"></span></td>
 	    			<td>
 	    				<!-- ko if: $data.type === 'folder' -->
 	    				<span class="folder-icon"></span>
@@ -47,7 +59,7 @@
     				<!-- ko if: $data.type === 'folder' -->
     					<td colspan="3" data-bind="click: $root.library.clickToEdit.bind($root.library, $data)">
     						<span data-bind="text: $data.name,  visible: ($root.library.fileEditor() === false || $root.library.selected() !== $data)"></span>
-    						<input type="text" data-bind="value: $data.name, visible: ($root.library.fileEditor() && $root.library.selected() === $data)" />
+    						<input type="text" data-bind="value: $data.name, visible: ($root.library.fileEditor() && $root.library.selected() === $data), hasFocus : $root.library.fileEditor() && $root.library.selected() === $data, event: {blur: $root.library.hideEditor.bind($root.library)}" />
     					</td>
     				<!-- /ko -->
     				<!-- ko ifnot: $data.type === 'folder' -->

@@ -1,3 +1,7 @@
+a, p, th, td, li, ul, h1, h2, h3, h4, h5, h6, span {
+  font-family: 'Lato', sans-serif;
+}
+
 body {
 	padding: 0;
 	margin: 0;
@@ -15,8 +19,51 @@ body {
 	box-shadow: 0px 2px 5px #888888;
 }
 
+.move-options{
+  right: 0px;
+  position: absolute;
+  width: 9%;
+  background-color: #BEC9D9;
+  box-shadow: 0px 2px 5px #888888;
+  cursor: pointer;
+}
+
+.move-options p{
+  text-align: center;
+  padding: 10px 0 10px 0px;
+  border-bottom: solid 1px white;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+}
+
+.move-options p:hover{
+    background-color: #EBF0F8;
+}
+
 span:hover {
 	cursor: pointer;
+}
+
+.delete {
+  width:30px;
+  height: 30px;
+  display: inline-block;
+    background: url('assets/delete.png') no-repeat;
+    background-size: 100% 100%;
+    float: right;
+    margin-right: 2%;
+    margin-top: -25px;
+}
+
+.move {
+  width:30px;
+  height: 30px;
+  display: inline-block;
+    background: url('assets/files-icon.png') no-repeat;
+    background-size: 100% 100%;
+    float: right;
+    margin-right: 2%;
+    margin-top: -25px;
 }
 
 .folder-icon {
