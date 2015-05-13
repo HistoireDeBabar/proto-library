@@ -35,10 +35,11 @@ describe("Library", function(){
 	//you can 'injector.mock and require'
 	var injector;
 
-	function it2(testDesc, objectDesc, mockData, func){
+	function it2(testDesc, mockData, func){
 		it(testDesc, function(done){
-	    	injector.mock(objectDesc, mockData);
-			injector.require([objectDesc], test);
+	    	injector.mock("doesn't seem to matter what goes in here as long as it matches the param in require", mockData);
+			injector.require(["doesn't seem to matter what goes in here as long as it matches the param in require"], func(mockData));
+			done();
 		});
 	};
 
@@ -58,10 +59,11 @@ describe("Library", function(){
 	describe("Folder", function(){
 		it("Should have state", function(done){
 			injector.require(['folder'], function(fold) {
-				var folder = new fold.createFolder("test name", [{type: 'campaign', name : 'campaign 4', description: 'testing 4', active : false}, {type: 'campaign', name : "campaign 5", description: "testing 5", "active" : true}]);
+				var cont = [{type: 'campaign', name : 'campaign 4', description: 'testing 4', active : false}, {type: 'campaign', name : "campaign 5", description: "testing 5", "active" : true}];
+				var folder = new fold.createFolder("test name", cont);
 				expect(folder).toBeDefined();
 				expect(folder.name()).toBe("test name");
-				expect(folder.contents()).toBe([{type: 'campaign', name : 'campaign 4', description: 'testing 4', active : false}, {type: 'campaign', name : "campaign 5", description: "testing 5", "active" : true}]);
+				expect(folder.contents()).toBe(cont);
 				done();
 			}, 
 			function(error) {
@@ -72,36 +74,30 @@ describe("Library", function(){
 
 	describe("Library Builder", function(){
 		describe("Build Function calls", function(){
-		var mockData =  {
-			buildHeaders : function(){},
-			createRoute : function(){},
-			buildFolders : function(){},
-			build : function(){
-				buildHeaders();
-				createRoute();
-				buildFolders();
-			}
-		};
-		it2("should call builder header function", "libraryBuilder", mockData, function(libraryBuilder){
-			spyOn(libraryBuilder, "buildHeaders");
-			libraryBuilder.build();
-			expect(libraryBuilder.buildHeaders).toHaveBeenCalled();
-		});
+			var mockData =  {
+				build : function(){
+				}
+			};
+			//non 'wrapped' version
+			it("should call build function (non wrapped version)", function(done){
+				injector.mock("libraryBuilder", mockData);
+				injector.require(["libraryBuilder"], function(libraryBuilder){
+					spyOn(libraryBuilder, "build");
+					libraryBuilder.build();
+					expect(libraryBuilder.build).toHaveBeenCalled();
+					done();
+				},
+				function(error) {
+					done.fail(error);
+				});
+			});
 
-		it2("should call createRoute function", "libraryBuilder", mockData, function(done){
-			injectTest(done, mockData, function(libraryBuilder){
-			spyOn(libraryBuilder, "createRoute");
-			libraryBuilder.build();
-			expect(libraryBuilder.createRoute).toHaveBeenCalled();
+			//'wrapped' version
+			it2("should call build function (wrapped version)", mockData, function(libraryBuilder){
+				spyOn(libraryBuilder, "build");
+				libraryBuilder.build();
+				expect(libraryBuilder.build).toHaveBeenCalled();
 			});
-		});
-		it2("should call buildFolders function", "libraryBuilder", mockData, function(done){
-			injectTest(done, mockData, function(libraryBuilder){
-			spyOn(libraryBuilder, "buildFolders");
-			libraryBuilder.build();
-			expect(libraryBuilder.buildFolders).toHaveBeenCalled();
-			});
-		});
 		});
 	});
 });
