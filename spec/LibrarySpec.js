@@ -38,7 +38,9 @@ describe("Library", function(){
 	function it2(testDesc, mockData, func){
 		it(testDesc, function(done){
 	    	injector.mock("doesn't seem to matter what goes in here as long as it matches the param in require", mockData);
-			injector.require(["doesn't seem to matter what goes in here as long as it matches the param in require"], func(mockData));
+			injector.require(["doesn't seem to matter what goes in here as long as it matches the param in require"], func(mockData), function(error) {
+					done.fail(error);
+				});
 			done();
 		});
 	};
